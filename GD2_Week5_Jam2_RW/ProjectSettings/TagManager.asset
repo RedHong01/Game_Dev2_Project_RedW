@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Goal
   - GameBoard
+  - destroyZone
+  - DestoryZone
   layers:
   - Default
   - TransparentFX

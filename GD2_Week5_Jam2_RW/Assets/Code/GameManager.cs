@@ -7,8 +7,9 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [Header("Destroy Zone")]
-    public Collider destroyZone;  // 摧毁区域
-    public string targetTag = "Player";
+    public Collider destroyZone;  // 摧毁区域的 Collider
+    public string playerTag = "Player";  // 用来检测带有Player标签的物体
+    public string destroyZoneTag = "DestroyZone";
 
     [Header("Player Settings")]
     public GameObject playerPrefab;  // 玩家预制件
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 每帧检查游戏中是否存在Player
-        if (GameObject.FindGameObjectsWithTag("Player").Length <= 0)
+        if (GameObject.FindGameObjectsWithTag(playerTag).Length <= 0)
         {
             RespawnPlayer();  // 如果没有玩家，复活玩家
         }
@@ -66,13 +67,13 @@ public class GameManager : MonoBehaviour
     // 当对象进入触发器时调用
     private void OnTriggerEnter(Collider other)
     {
-        // 如果指定了标签，只摧毁匹配标签的对象
-        if (!string.IsNullOrEmpty(targetTag))
+        Debug.Log("Something collided with DestroyZone: " + other.gameObject.name);
+
+        // 检查碰撞的物体是否带有Player标签
+        if (other.CompareTag(playerTag))
         {
-            if (other.CompareTag(targetTag))
-            {
-                DestroyObject(other.gameObject);
-            }
+            Debug.Log("Player collided with DestroyZone, destroying Player.");
+            DestroyObject(other.gameObject);  // 正确地传递 other.gameObject
         }
     }
 
@@ -106,7 +107,7 @@ public class GameManager : MonoBehaviour
     private void DestroyObject(GameObject obj)
     {
         Debug.Log(obj.name + " entered the Destroy Zone and was destroyed.");
-        Destroy(obj);  // 销毁进入触发器的对象
+        Destroy(obj);  // 销毁 Player 对象
     }
 
     // 切换到下一个场景
